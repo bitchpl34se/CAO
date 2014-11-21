@@ -86,9 +86,9 @@ void Renderer::DrawGouraud()
             c3 = drawable->pointColors.data[drawable->faces.data[cpt].index3];
 
             /* on ajoute la lumière ambiante et la lumière ponctuelle ponctuelle à nos couleurs */
-            c1 = c1 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index1], effectiveDrawable->faceNormals.data[cpt]));
-            c2 = c2 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index2], effectiveDrawable->faceNormals.data[cpt]));
-            c3 = c3 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index3], effectiveDrawable->faceNormals.data[cpt]));
+            c1 = c1 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index1], effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index1]));
+            c2 = c2 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index2], effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index2]));
+            c3 = c3 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index3], effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index3]));
 
             buffer->DrawFilledTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1],
                                        renderable.points2D.data[drawable->faces.data[cpt].index2],
