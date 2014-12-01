@@ -46,7 +46,11 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         critere = const2 - (longX);
         for(cpt = 0; cpt <= longX; cpt++)
         {
-            AddPoint(X, Y, p1, p2, index1, index2);
+            /* Pour éviter d'avoir un bug à cause de modèles trop grands */
+            if(Y < height && Y >= 0)
+            {
+                AddPoint(X, Y, p1, p2, index1, index2);
+            }
 
             if(critere > 0)
             {
@@ -67,7 +71,11 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         critere = const2 - longY;
         for(cpt = 0; cpt <= longY; cpt++)
         {
-            AddPoint(X, Y, p1, p2, index1, index2);
+            /* Pour éviter d'avoir un bug à cause de modèles trop grands */
+            if(Y < height && Y >= 0)
+            {
+                AddPoint(X, Y, p1, p2, index1, index2);
+            }
 
             if(critere > 0)
             {

@@ -174,5 +174,50 @@ void Renderer::DrawGouraud()
 
 void Renderer::DrawPhong()
 {
-	// compléter ici
+    int cpt;
+	for(cpt = 0; cpt < drawable->faces.size; cpt++)
+    {
+        if(drawable->colorOnFace)
+        {
+             if(effectiveDrawable->faceVisibles.data[cpt] == 1)
+            {
+                buffer->DrawPhongTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1],
+                                          renderable.points2D.data[drawable->faces.data[cpt].index2],
+                                          renderable.points2D.data[drawable->faces.data[cpt].index3],
+                                          drawable->faceColors.data[drawable->faces.data[cpt].index1],
+                                          drawable->faceColors.data[drawable->faces.data[cpt].index2],
+                                          drawable->faceColors.data[drawable->faces.data[cpt].index3],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index1],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index2],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index3],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index1],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index2],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index3],
+                                          ambientLight,
+                                          pointLight
+                                          );
+            }
+        }
+        else
+        {
+            if(effectiveDrawable->faceVisibles.data[cpt] == 1)
+            {
+                buffer->DrawPhongTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1],
+                                          renderable.points2D.data[drawable->faces.data[cpt].index2],
+                                          renderable.points2D.data[drawable->faces.data[cpt].index3],
+                                          drawable->pointColors.data[drawable->faces.data[cpt].index1],
+                                          drawable->pointColors.data[drawable->faces.data[cpt].index2],
+                                          drawable->pointColors.data[drawable->faces.data[cpt].index3],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index1],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index2],
+                                          effectiveDrawable->points.data[drawable->faces.data[cpt].index3],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index1],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index2],
+                                          effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index3],
+                                          ambientLight,
+                                          pointLight
+                                          );
+            }
+        }
+    }
 }
