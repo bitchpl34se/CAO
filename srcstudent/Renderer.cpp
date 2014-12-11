@@ -10,9 +10,9 @@ void Renderer::DrawFilaire()
     {
         for(cpt = 0; cpt < drawable->faces.size ; cpt++)
         {
-           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[drawable->faces.data[cpt].index1], drawable->faceColors.data[drawable->faces.data[cpt].index2]);
-           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[drawable->faces.data[cpt].index3]);
-           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[drawable->faces.data[cpt].index1], drawable->faceColors.data[drawable->faces.data[cpt].index3]);
+           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
+           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
+           buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
         }
     }
     else
@@ -36,9 +36,9 @@ void Renderer::DrawFilaireCache()
         {
             if(effectiveDrawable->faceVisibles.data[cpt] == 1)
             {
-                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[drawable->faces.data[cpt].index1], drawable->faceColors.data[drawable->faces.data[cpt].index2]);
-                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[drawable->faces.data[cpt].index3]);
-                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[drawable->faces.data[cpt].index1], drawable->faceColors.data[drawable->faces.data[cpt].index3]);
+                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
+                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
+                buffer->DrawLine(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
             }
         }
     }
@@ -65,7 +65,7 @@ void Renderer::DrawFacePleine()
         {
             if(effectiveDrawable->faceVisibles.data[cpt] == 1)
             {
-                buffer->DrawFilledTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[drawable->faces.data[cpt].index1], drawable->faceColors.data[drawable->faces.data[cpt].index2], drawable->faceColors.data[drawable->faces.data[cpt].index3]);
+                buffer->DrawFilledTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1], renderable.points2D.data[drawable->faces.data[cpt].index2], renderable.points2D.data[drawable->faces.data[cpt].index3], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt], drawable->faceColors.data[cpt]);
             }
         }
     }
@@ -93,9 +93,9 @@ void Renderer::DrawLambert()
         {
             if(effectiveDrawable->faceVisibles.data[cpt] == 1)
             {
-                c1 = drawable->faceColors.data[drawable->faces.data[cpt].index1];
-                c2 = drawable->faceColors.data[drawable->faces.data[cpt].index2];
-                c3 = drawable->faceColors.data[drawable->faces.data[cpt].index3];
+                c1 = drawable->faceColors.data[cpt];
+                c2 = drawable->faceColors.data[cpt];
+                c3 = drawable->faceColors.data[cpt];
 
                 /* on ajoute la lumière ambiante et la lumière ponctuelle ponctuelle à nos couleurs */
                 c1 = c1 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index1], effectiveDrawable->faceNormals.data[cpt]));
@@ -138,9 +138,9 @@ void Renderer::DrawGouraud()
         {
             if(effectiveDrawable->faceVisibles.data[cpt] == 1)
             {
-                c1 = drawable->faceColors.data[drawable->faces.data[cpt].index1];
-                c2 = drawable->faceColors.data[drawable->faces.data[cpt].index2];
-                c3 = drawable->faceColors.data[drawable->faces.data[cpt].index3];
+                c1 = drawable->faceColors.data[cpt];
+                c2 = drawable->faceColors.data[cpt];
+                c3 = drawable->faceColors.data[cpt];
 
                 /* on ajoute la lumière ambiante et la lumière ponctuelle ponctuelle à nos couleurs */
                 c1 = c1 * (ambientLight.ambientColor + pointLight.GetColor(effectiveDrawable->points.data[drawable->faces.data[cpt].index1], effectiveDrawable->pointNormals.data[drawable->faces.data[cpt].index1]));
@@ -184,9 +184,9 @@ void Renderer::DrawPhong()
                 buffer->DrawPhongTriangle(renderable.points2D.data[drawable->faces.data[cpt].index1],
                                           renderable.points2D.data[drawable->faces.data[cpt].index2],
                                           renderable.points2D.data[drawable->faces.data[cpt].index3],
-                                          drawable->faceColors.data[drawable->faces.data[cpt].index1],
-                                          drawable->faceColors.data[drawable->faces.data[cpt].index2],
-                                          drawable->faceColors.data[drawable->faces.data[cpt].index3],
+                                          drawable->faceColors.data[cpt],
+                                          drawable->faceColors.data[cpt],
+                                          drawable->faceColors.data[cpt],
                                           effectiveDrawable->points.data[drawable->faces.data[cpt].index1],
                                           effectiveDrawable->points.data[drawable->faces.data[cpt].index2],
                                           effectiveDrawable->points.data[drawable->faces.data[cpt].index3],
