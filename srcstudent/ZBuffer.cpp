@@ -8,6 +8,7 @@ void ZBuffer::Init()
     {
         for(cpt2 = 0; cpt2 < depths.data[cpt].size; cpt2++)
         {
+            /* pour chaque pixel, on initialise sa profondeur à la valeur max du type double (~ infini) */
             depths.data[cpt].data[cpt2] = DBL_MAX;
         }
     }
@@ -22,10 +23,11 @@ bool ZBuffer::ReplaceCurrent(const Coord2D p)
     {
         if(p.depth >= depths.data[p.y].data[p.x])
         {
+            /* p est plus profond que le point de même coordonnées (p.x,p.y), on ne remplace donc pas ce dernier par p */
             return false;
         }
+        /* on remplace la valeur de profondeur du point (p.x,p.y) */
         depths.data[p.y].data[p.x] = p.depth;
     }
     return true;
 }
-

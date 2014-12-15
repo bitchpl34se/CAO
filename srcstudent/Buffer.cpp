@@ -1,7 +1,7 @@
 #include <Buffer.h>
 #include <FastMath.h>
 
-
+/** Algorithme de Bresenham */
 void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
 		const Color c2)
 {
@@ -43,17 +43,18 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         critere = const2 - (longX);
         for(cpt = 0; cpt <= longX; cpt++)
         {
-            //coordonnées du nouveau point à dessiner
+            /* coordonnées du nouveau point à dessiner */
             myPoint.x = X;
             myPoint.y = Y;
 
-            //couleur du nouveau point à dessiner
+            /* poids et composantes de la couleur du nouveau point à dessiner */
             wA = 1 - (p1.Distance(myPoint) / p1.Distance(p2));
             wB = 1 - wA;
             c3.red = ((wA * c1.red) + (wB * c2.red)) / (wA + wB);
             c3.green = ((wA * c1.green) + (wB * c2.green)) / (wA + wB);
             c3.blue = ((wA * c1.blue) + (wB * c2.blue)) / (wA + wB);
-            //interpolation de la profondeur pour le z-buffer
+
+            /* interpolation de la profondeur pour le z-buffer */
             myPoint.depth = ((wA * p1.depth) + (wB * p2.depth)) / (wA + wB);
 
             SetPoint(myPoint, c3);
@@ -77,17 +78,18 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,
         critere = const2 - longY;
         for(cpt = 0; cpt <= longY; cpt++)
         {
-            //coordonnées du nouveau point à dessiner
+            /* coordonnées du nouveau point à dessiner */
             myPoint.x = X;
             myPoint.y = Y;
 
-            //couleur du nouveau point à dessiner
+            /* poids et composantes de la couleur du nouveau point à dessiner */
             wA = 1 - (p1.Distance(myPoint) / p1.Distance(p2));
             wB = 1 - wA;
             c3.red = ((wA * c1.red) + (wB * c2.red)) / (wA + wB);
             c3.green = ((wA * c1.green) + (wB * c2.green)) / (wA + wB);
             c3.blue = ((wA * c1.blue) + (wB * c2.blue)) / (wA + wB);
-            //interpolation de la profondeur pour le z-buffer
+
+            /* interpolation de la profondeur pour le z-buffer */
             myPoint.depth = ((wA * p1.depth) + (wB * p2.depth)) / (wA + wB);
 
             SetPoint(myPoint, c3);
@@ -120,13 +122,13 @@ void Buffer::DrawFilledTriangle(const Coord2D p1, const Coord2D p2,
 	myScan.Compute(p1, p2, p3);
 	for(cpt = myScan.ymin; cpt <= myScan.ymax; cpt++)
     {
-        /* Les extrêmités de la ligne */
+        /* extrêmités de la ligne */
         myPoint1.x = myScan.left.data[cpt];
         myPoint1.y = cpt;
         myPoint2.x = myScan.right.data[cpt]+1;
         myPoint2.y = cpt;
 
-        /* Les couleurs de ces extrêmités */
+        /* poids et composantes de la couleur de l'extrêmité 1 */
         wA4 = myScan.leftweight.data[cpt].data[0];
         wB4 = myScan.leftweight.data[cpt].data[1];
         wC4 = myScan.leftweight.data[cpt].data[2];
@@ -134,12 +136,19 @@ void Buffer::DrawFilledTriangle(const Coord2D p1, const Coord2D p2,
         c4.green = ((wA4 * c1.green) + (wB4 * c2.green) + (wC4 * c3.green)) / (wA4 + wB4 + wC4);
         c4.blue = ((wA4 * c1.blue) + (wB4 * c2.blue) + (wC4 * c3.blue)) / (wA4 + wB4 + wC4);
 
+        /* interpolation de la profondeur de l'extrêmité 1 pour le z-buffer */
+        myPoint1.depth = ((wA4 * p1.depth) + (wB4 * p2.depth) + (wC4 * p3.depth)) / (wA4 + wB4 + wC4);
+
+        /* poids et couleurs de l'extrêmité 2 */
         wA5 = myScan.rightweight.data[cpt].data[0];
         wB5 = myScan.rightweight.data[cpt].data[1];
         wC5 = myScan.rightweight.data[cpt].data[2];
         c5.red = ((wA5 * c1.red) + (wB5 * c2.red) + (wC5 * c3.red)) / (wA5 + wB5 + wC5);
         c5.green = ((wA5 * c1.green) + (wB5 * c2.green) + (wC5 * c3.green)) / (wA5 + wB5 + wC5);
         c5.blue = ((wA5 * c1.blue) + (wB5 * c2.blue) + (wC5 * c3.blue)) / (wA5 + wB5 + wC5);
+
+        /*interpolation de la profondeur de l'extrêmité 2 pour le z-buffer*/
+        myPoint2.depth = ((wA5 * p1.depth) + (wB5 * p2.depth) + (wC5 * p3.depth)) / (wA5 + wB5 + wC5);
 
         /* Traçage de la ligne avec les 2 extrêmités précédentes comme sommets */
         DrawLine(myPoint1, myPoint2, c4, c5);
@@ -153,11 +162,8 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
 		const AmbientLight & ambientLight, const PointLight & pointLight)
 {
     int cpt, cpt2;
-    /* poids */
     double wA4, wB4, wC4, wA5, wB5, wC5, wA6, wB6;
-    /* extrêmités de la ligne */
     Coord2D myPoint1, myPoint2, myPoint3;
-    /* normales de ces points */
     Coord3D normal4, normal5, normal6, myPoint1_3D, myPoint2_3D, myPoint3_3D;
     Color c4, c5, c6;
 
@@ -167,34 +173,36 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
 	myScan.Compute(p1, p2, p3);
 	for(cpt = myScan.ymin; cpt <= myScan.ymax; cpt++)
     {
-        /* Les extrêmités de la ligne */
+        /* extrêmités de la ligne */
         myPoint1.x = myScan.left.data[cpt];
         myPoint1.y = cpt;
         myPoint2.x = myScan.right.data[cpt]+1;
         myPoint2.y = cpt;
 
-        /* Les poids associés au point 1 */
+        /* poids associés au point 1 */
         wA4 = myScan.leftweight.data[cpt].data[0];
         wB4 = myScan.leftweight.data[cpt].data[1];
         wC4 = myScan.leftweight.data[cpt].data[2];
 
-        /* interpollation des normales du point 1*/
+        /* interpollation des normales du point 1 */
         normal4.x = ((wA4 * normal1.x) + (wB4 * normal2.x) + (wC4 * normal3.x)) / (wA4 + wB4 + wC4);
         normal4.y = ((wA4 * normal1.y) + (wB4 * normal2.y) + (wC4 * normal3.y)) / (wA4 + wB4 + wC4);
         normal4.z = ((wA4 * normal1.z) + (wB4 * normal2.z) + (wC4 * normal3.z)) / (wA4 + wB4 + wC4);
 
-        /* interpollation des points 3D du point 1*/
+        /* interpollation des composantes 3D du point 1 */
         myPoint1_3D.x = ((wA4 * posi1.x) + (wB4 * posi2.x) + (wC4 * posi3.x)) / (wA4 + wB4 + wC4);
         myPoint1_3D.y = ((wA4 * posi1.y) + (wB4 * posi2.y) + (wC4 * posi3.y)) / (wA4 + wB4 + wC4);
         myPoint1_3D.z = ((wA4 * posi1.z) + (wB4 * posi2.z) + (wC4 * posi3.z)) / (wA4 + wB4 + wC4);
 
-        /* interpollation des couleurs du point 1*/
+        /* interpollation des composantes de la couleur du point 1 */
         c4.red = ((wA4 * c1.red) + (wB4 * c2.red) + (wC4 * c3.red)) / (wA4 + wB4 + wC4);
         c4.green = ((wA4 * c1.green) + (wB4 * c2.green) + (wC4 * c3.green)) / (wA4 + wB4 + wC4);
         c4.blue = ((wA4 * c1.blue) + (wB4 * c2.blue) + (wC4 * c3.blue)) / (wA4 + wB4 + wC4);
-        /*interpolation de la profondeur du point 1 pour le z-buffer*/
-        myPoint2.depth = ((wA4 * p1.depth) + (wB4 * p2.depth) + (wC4 * p3.depth)) / (wA4 + wB4 + wC4);
 
+        /* interpolation de la profondeur du point 1 pour le z-buffer */
+        myPoint1.depth = ((wA4 * p1.depth) + (wB4 * p2.depth) + (wC4 * p3.depth)) / (wA4 + wB4 + wC4);
+
+        /* idem pour le point 2 */
         wA5 = myScan.rightweight.data[cpt].data[0];
         wB5 = myScan.rightweight.data[cpt].data[1];
         wC5 = myScan.rightweight.data[cpt].data[2];
@@ -211,7 +219,7 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
         c5.green = ((wA5 * c1.green) + (wB5 * c2.green) + (wC5 * c3.green)) / (wA5 + wB5 + wC5);
         c5.blue = ((wA5 * c1.blue) + (wB5 * c2.blue) + (wC5 * c3.blue)) / (wA5 + wB5 + wC5);
 
-        myPoint3.depth = ((wA5 * p1.depth) + (wB5 * p2.depth) + (wC5 * p3.depth)) / (wA5 + wB5 + wC5);
+        myPoint2.depth = ((wA5 * p1.depth) + (wB5 * p2.depth) + (wC5 * p3.depth)) / (wA5 + wB5 + wC5);
 
         /* Traçage de la ligne avec les 2 extrêmités précédentes comme sommets */
         for(cpt2 = myPoint1.x; cpt2 <= myPoint2.x; cpt2++)
@@ -239,4 +247,3 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
         }
     }
 }
-
